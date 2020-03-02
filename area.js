@@ -3,7 +3,7 @@ AREA = {};
 (function() {
 
 // Number of groups to create.
-const NUM_AGGS = 9;
+const NUM_AGGS = 7;
 
 /**
  * Initialize the area chart visualization.
@@ -27,7 +27,7 @@ AREA.init = (aggField) => {
   }
   topAggKeys.push(i);
   topAggs = Object.keys(topAggSet);
-  console.log(topAggs, topAggKeys);
+  topAggs.push('Other');
 
   let gamesByYear = d3.nest()
       .key(d => d.year)
@@ -59,8 +59,11 @@ AREA.init = (aggField) => {
   const color = d3.scaleOrdinal(topAggs, d3.schemeCategory10);
 
   const stacked = d3.stack()
-      .keys(topAggKeys)
-      .value((d, key) => d.values[key] ? d.values[key].value : 0)
+      .keys(topAggs)
+      .value((d, key) => {
+          const entry = d.values.filter((v) => v.key == key)[0];
+          return entry ? entry.value : 0;
+      })
   (gamesByYear);
   console.log(stacked);
 
@@ -87,21 +90,21 @@ AREA.init = (aggField) => {
   // Legend.
   const rectSize = 20;
   const rectMargin = 5;
-  console.log(topAggKeys);
+  const legendX = width + margin.left - 20;
   svg.selectAll('rects')
-      .data(topAggKeys)
+      .data(topAggs)
       .enter()
       .append('rect')
-          .attr('x', width + margin.left)
+          .attr('x', legendX)
           .attr('y', (d, i) => 10 + i * (rectSize+rectMargin))
           .attr('width', rectSize)
           .attr('height', rectSize)
           .style('fill', (d) => color(d));
   svg.selectAll('labels')
-      .data(topAggKeys)
+      .data(topAggs)
       .enter()
       .append('text')
-          .attr('x',width + margin.left + rectSize * 1.3)
+          .attr('x', legendX + rectSize * 1.3)
           .attr('y', (d, i) => 20 + i * (rectSize+rectMargin))
           .text(d => d)
           .attr('text-anchor', 'left')

@@ -16,7 +16,6 @@ d3.csv('data/steam.csv', (d) => {
     owners: +d.owners.match(ownersRe)[0],
   };
 }).then((d) => {
-  // console.log(d);
   MAIN.data = d;
   AREA.init('developer');
 });
