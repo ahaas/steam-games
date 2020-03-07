@@ -61,9 +61,48 @@ p {
   line-height: 1.7;
 }
 
+.vis-title {
+  text-align: center;
+  margin-bottom: 20px;
+  /* Font settings */
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 .goty-year {
-  background-color: rgba(0,0,0,0.1);
-  margin: 5px 0;
-  padding: 5px;
+  margin-bottom: 10px;
   display: flex;
+}
+
+.goty-year:last-child {
+  margin-bottom: 0;
+}
+
+.goty-year .year-label {
+  margin-right: 20px;
+  padding: 5px;
+}
+
+.goty-year .games-container {
+  display: flex;
+  flex-grow: 1;
+}
+
+.goty-year .games-bar {
+  display: flex;
+}
+
+.goty-year .top-game {
+  background-color: #3b5b8c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px 10px;
+  margin-right: 10px;
+  flex: 1;
+  min-width: 0;
+  width: 0;
 }
