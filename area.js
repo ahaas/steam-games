@@ -44,11 +44,10 @@ AREA.init = (aggField) => {
   gamesByYear = gamesByYear.filter((d) =>
     +d.key >= 2000 && +d.key <= 2018
   );
-  console.log(gamesByYear);
 
   const margin = {top: 20, left: 80};
   const width = 700;
-  const height = 400;
+  const height = 450;
 
   const svg = d3.select('#svg1')
       .append('g')
@@ -56,7 +55,9 @@ AREA.init = (aggField) => {
 
   const x = d3.scaleLinear([2000, 2018], [0, width]);
   const y = d3.scaleLinear([0, 3.5e8], [height, 0]);
-  const color = d3.scaleOrdinal(topAggs, d3.schemeCategory10);
+  // const schemeCategory = ["#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5", "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f", "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
+  const schemeCategory = d3.schemeCategory10;
+  const color = d3.scaleOrdinal(topAggs, schemeCategory);
 
   const stacked = d3.stack()
       .keys(topAggs)
@@ -65,7 +66,6 @@ AREA.init = (aggField) => {
           return entry ? entry.value : 0;
       })
   (gamesByYear);
-  console.log(stacked);
 
   svg.selectAll('layers')
       .data(stacked)
@@ -90,7 +90,7 @@ AREA.init = (aggField) => {
   // Legend.
   const rectSize = 20;
   const rectMargin = 5;
-  const legendX = width + margin.left - 20;
+  const legendX = width + margin.left - 40;
   svg.selectAll('rects')
       .data(topAggs)
       .enter()

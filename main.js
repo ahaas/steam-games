@@ -17,7 +17,8 @@ d3.csv('data/steam.csv', (d) => {
   };
 }).then((d) => {
   MAIN.data = d;
-  AREA.init('developer');
+  AREA.init('publisher');
+  GOTY.init();
 });
 
 
