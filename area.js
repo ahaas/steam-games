@@ -181,7 +181,8 @@ AREA.init = (aggField) => {
         .style('display', 'block')
         .style('left', (d3.event.pageX + 10) + 'px')
         .style('top', (d3.event.pageY + 10) + 'px')
-        .html([`<b>${d.key}</b>`].concat(gameStrings).join('<br/>'));
+        .html([`<b class="tooltip-title">${d.key}</b>`]
+                  .concat(gameStrings).join('<br/>'));
   }
   function handleMouseMove() {
     tooltip

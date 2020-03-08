@@ -13,7 +13,7 @@ TOOLTIP = {};
   TOOLTIP.game = (appid) => {
     const g = gamesByAppid[appid];
     let strs = [
-      `<b>${g.name}</b>`,
+      `<b class="tooltip-title">${g.name}</b>`,
       `<b>Owners</b>: ${d3.format('.1s')(g.owners)}`,
       `<b>Developer</b>: ${g.developer.replace(/;/g, ', ')}`,
       `<b>Publisher</b>: ${g.publisher.replace(/;/g, ', ')}`,
