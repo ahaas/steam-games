@@ -106,3 +106,7 @@ p {
   min-width: 0;
   width: 0;
 }
+
+text {
+  fill: white;
+}

@@ -45,16 +45,16 @@ AREA.init = (aggField) => {
     +d.key >= 2000 && +d.key <= 2018
   );
 
-  const margin = {top: 20, left: 80};
+  const margin = {top: 10, left: 100};
   const width = 700;
-  const height = 450;
+  const height = 440;
 
   const svg = d3.select('#svg1')
       .append('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
   const x = d3.scaleLinear([2000, 2018], [0, width]);
-  const y = d3.scaleLinear([0, 3.5e8], [height, 0]);
+  const y = d3.scaleLinear([0, 3e8], [height, 0]);
   // const schemeCategory = ["#1f77b4", "#aec7e8", "#ff7f0e", "#ffbb78", "#2ca02c", "#98df8a", "#d62728", "#ff9896", "#9467bd", "#c5b0d5", "#8c564b", "#c49c94", "#e377c2", "#f7b6d2", "#7f7f7f", "#c7c7c7", "#bcbd22", "#dbdb8d", "#17becf", "#9edae5"];
   const schemeCategory = d3.schemeCategory10;
   const color = d3.scaleOrdinal(topAggs, schemeCategory);
@@ -82,15 +82,27 @@ AREA.init = (aggField) => {
   svg.append('g')
       .attr('transform', 'translate(0,' + height + ')')
       .call(d3.axisBottom(x).tickFormat(d3.format('d')));
+  svg.append('text')
+      .attr('x', width/2)
+      .attr('y', height + margin.top + 36)
+      .style('text-anchor', 'middle')
+      .text('Year of Release');
 
   // Left axis.
   svg.append('g')
       .call(d3.axisLeft(y));
+  svg.append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('x', -height / 2)
+      .attr('y', -100)
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('Approximate Number of Owners');
 
   // Legend.
   const rectSize = 20;
   const rectMargin = 5;
-  const legendX = width + margin.left - 40;
+  const legendX = width + margin.left - 90;
   svg.selectAll('rects')
       .data(topAggs)
       .enter()
