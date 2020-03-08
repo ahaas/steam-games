@@ -1,6 +1,6 @@
-(function() {
-
 MAIN = {};
+
+(function() {
 
 MAIN.data = {};
 
@@ -18,9 +18,11 @@ d3.csv('data/steam.csv', (d) => {
     numRatings: (+d.positive_ratings) + (+d.negative_ratings),
     rating: (+d.positive_ratings) /
              ((+d.positive_ratings) + (+d.negative_ratings)),
+    genres: d.genres,
   };
 }).then((d) => {
   MAIN.data = d;
+  TOOLTIP.init();
   AREA.init('publisher');
   GOTY.init();
   RATING.init();

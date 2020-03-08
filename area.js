@@ -79,6 +79,10 @@ AREA.init = (aggField) => {
       })
   (gamesByYear);
 
+  // Horizontal grid lines.
+  svg.append('g')
+      .attr('class', 'gridline')
+      .call(d3.axisLeft(y).tickSize(-width).tickFormat(''));
   const keyToClass = (key) => key.toLowerCase().replace(/ /, '-');
   svg.selectAll('layers')
       .data(stacked)
@@ -120,6 +124,12 @@ AREA.init = (aggField) => {
   const rectSize = 20;
   const rectMargin = 5;
   const legendX = margin.left - 50;
+  svg.append('rect')
+      .attr('x', legendX-15)
+      .attr('y', 0)
+      .attr('width', 220)
+      .attr('height', 220)
+      .attr('class', 'legend-bg');
   svg.selectAll('rects')
       .data(topAggs)
       .enter()

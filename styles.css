@@ -72,6 +72,18 @@ p {
   text-transform: uppercase;
 }
 
+.legend-bg {
+  fill: rgba(59,60,61,0.5);
+}
+
+.gridline line {
+  color: rgba(255,255,255,0.07);
+}
+
+.gridline .domain {
+  color: rgba(0,0,0,0);
+}
+
 .goty-year {
   margin-bottom: 10px;
   display: flex;
@@ -112,7 +124,7 @@ text {
 }
 
 .gamept {
-  fill: rgba(130,179,255,0.33);
+  fill: rgba(130,179,255,0.1);
 }
 
 #tooltip {

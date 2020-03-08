@@ -80,18 +80,24 @@ GOTY.init = () => {
       .forEach(div => {
         const year = div.getAttribute('data-year');
         // const width = getTopGameOwners(gamesByYear, year) / maxTopGameOwners * 100;
-        width = 100;
+        const width = 100;
         html = ''
         html += `<div class="year-label">${year}</div>`;
         html += `<div class="games-container">`;
         html += `<div class="games-bar" style="width: ${width}%;">`;
         gamesByYear[year].topGames.forEach(g => {
-          html += `<div class="top-game">${g.name}</div>`;
+          html += `<div data-appid="${g.appid}" class="top-game">${g.name}</div>`;
         });
         html += `</div>`
         html += `</div>`
         div.innerHTML = html;
       });
+  d3.selectAll('.top-game')
+      .on('mouseover', function() {
+        TOOLTIP.game(this.getAttribute('data-appid'));
+      })
+      .on('mousemove', TOOLTIP.update)
+      .on('mouseout', TOOLTIP.hide);
 
 };
 
