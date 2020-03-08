@@ -45,8 +45,20 @@ AREA.init = (aggField) => {
     +d.key >= 2000 && +d.key <= 2018
   );
 
+  // Get the top games for each ${aggField}.
+  let gamesByAgg = d3.nest()
+      .key(d => d[aggField])
+      .object(MAIN.data.filter(d => topAggSet[d[aggField]]));
+  Object.keys(gamesByAgg).forEach((agg) => {
+    // Get only the top X games, then sort by year.
+    gamesByAgg[agg] = gamesByAgg[agg]
+        .sort((a, b) => b.owners - a.owners)
+        .slice(0, 5)
+        .sort((a, b) => a.year - b.year);
+  });
+
   const margin = {top: 10, left: 100};
-  const width = 700;
+  const width = 850;
   const height = 440;
 
   const svg = d3.select('#svg1')
@@ -67,16 +79,21 @@ AREA.init = (aggField) => {
       })
   (gamesByYear);
 
+  const keyToClass = (key) => key.toLowerCase().replace(/ /, '-');
   svg.selectAll('layers')
       .data(stacked)
       .enter()
       .append('path')
           .style('fill', d => color(d.key))
+          .attr('class', d => `vis1-area area-${keyToClass(d.key)}`)
           .attr('d', d3.area()
               .x((d, i) => x(d.data.key))
               .y0(d => y(d[0]))
               .y1(d => y(d[1]))
-          );
+          )
+      .on('mouseover', handleMouseOver)
+      .on('mousemove', handleMouseMove)
+      .on('mouseout', handleMouseOut);
 
   // Bottom axis.
   svg.append('g')
@@ -102,7 +119,7 @@ AREA.init = (aggField) => {
   // Legend.
   const rectSize = 20;
   const rectMargin = 5;
-  const legendX = width + margin.left - 90;
+  const legendX = margin.left - 50;
   svg.selectAll('rects')
       .data(topAggs)
       .enter()
@@ -111,7 +128,10 @@ AREA.init = (aggField) => {
           .attr('y', (d, i) => 10 + i * (rectSize+rectMargin))
           .attr('width', rectSize)
           .attr('height', rectSize)
-          .style('fill', (d) => color(d));
+          .style('fill', (d) => color(d))
+      .on('mouseover', handleLegendMouseOver)
+      .on('mousemove', handleMouseMove)
+      .on('mouseout', handleLegendMouseOut);
   svg.selectAll('labels')
       .data(topAggs)
       .enter()
@@ -121,7 +141,46 @@ AREA.init = (aggField) => {
           .text(d => d)
           .attr('text-anchor', 'left')
           .style('alignment-baseline', 'middle')
-          .style('fill', (d) => color(d));
+          .style('fill', (d) => color(d))
+      .on('mouseover', handleLegendMouseOver)
+      .on('mousemove', handleMouseMove)
+      .on('mouseout', handleLegendMouseOut);
+
+  // Legend mouseover.
+  function handleLegendMouseOver(d) {
+    d3.selectAll('.vis1-area').style('opacity', 0.2);
+    d3.select(`.area-${keyToClass(d)}`).style('opacity', 1);
+    handleMouseOver({key: d});
+  }
+  function handleLegendMouseOut(d) {
+    d3.selectAll('.vis1-area').style('opacity', 1);
+    handleMouseOut();
+  }
+
+  // Area tooltip.
+  const tooltip = d3.select('#tooltip');
+  function handleMouseOver(d) {
+    let gameStrings = [];
+    if (d.key != 'Other') {
+      gameStrings = ['Top games:'];
+      gamesByAgg[d.key].forEach(g => {
+        gameStrings.push(`${g.year}: ${g.name} (${d3.format('.1s')(g.owners)} owners)`);
+      });
+    }
+    tooltip
+        .style('display', 'block')
+        .style('left', (d3.event.pageX + 10) + 'px')
+        .style('top', (d3.event.pageY + 10) + 'px')
+        .html([`<b>${d.key}</b>`].concat(gameStrings).join('<br/>'));
+  }
+  function handleMouseMove() {
+    tooltip
+        .style('left', (d3.event.pageX + 10) + 'px')
+        .style('top', (d3.event.pageY + 10) + 'px')
+  }
+  function handleMouseOut() {
+    tooltip.style('display', 'none');
+  }
 
 };
 

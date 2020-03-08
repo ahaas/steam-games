@@ -28,7 +28,7 @@ RATING.init = () => {
         .attr('cy', d => y(d.owners) + (Math.random()-0.5)*12)
         .attr('r', 3)
         .attr('appid', d => d.appid)
-        .style('fill', 'rgba(255,255,255,0.1)');
+        .attr('class', 'gamept');
 
   // Bottom axis.
   svg.append('g')

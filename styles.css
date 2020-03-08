@@ -110,3 +110,17 @@ p {
 text {
   fill: white;
 }
+
+.gamept {
+  fill: rgba(130,179,255,0.33);
+}
+
+#tooltip {
+  display: none;
+  position: absolute;
+  z-index: 10;
+  padding: 3px 5px;
+  font-size: 14px;
+  background-color: rgba(255,255,255,0.9);
+  color: black;
+}
