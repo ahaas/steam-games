@@ -93,6 +93,6 @@ GOTY.init = () => {
         div.innerHTML = html;
       });
 
-}
+};
 
 })();
