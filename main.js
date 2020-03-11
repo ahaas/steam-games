@@ -19,6 +19,7 @@ d3.csv('data/steam.csv', (d) => {
     rating: (+d.positive_ratings) /
              ((+d.positive_ratings) + (+d.negative_ratings)),
     genres: d.genres,
+    categories: d.categories,
   };
 }).then((d) => {
   MAIN.data = d;

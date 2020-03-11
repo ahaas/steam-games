@@ -7,9 +7,29 @@ const MAX_YEAR = 2019;
 
 const prepData = () => {
 
+  // Apply filters.
+  let filteredData = [];
+  let categoryFilter = '';
+  if (document.getElementById('vis2-select-category')) {
+    categoryFilter = document.getElementById('vis2-select-category').value;
+  }
+  if (categoryFilter == '') {
+    filteredData = MAIN.data;
+  } else {
+    MAIN.data.forEach(g => {
+      if (g.genres.includes(categoryFilter) ||
+          g.categories.includes(categoryFilter)) {
+        filteredData.push(g);
+      }
+    });
+  }
+
+  console.log('filtered: ', filteredData);
+
+  // Organize data by year.
   let gamesByYear = d3.nest()
       .key(d => d.year)
-      .object(MAIN.data);
+      .object(filteredData);
 
   // For each year...
   Object.keys(gamesByYear).map(year => {
@@ -67,11 +87,10 @@ const getTopGameOwners = (gamesByYear, year) => {
   return out;
 }
 
-GOTY.init = () => {
-
+const drawChart = () => {
   const gamesByYear = prepData();
-  console.log(gamesByYear);
-  const container = document.getElementById('vis2');
+  const container = document.getElementById('vis2-dynamic');
+  container.innerHTML = '';
   // const maxTopGameOwners = getMaxTopGameOwners(gamesByYear);
   for (let i=MIN_YEAR; i <= MAX_YEAR; i++) {
     container.innerHTML += `<div data-year="${i}" class="goty-year"></div>`
@@ -85,9 +104,11 @@ GOTY.init = () => {
         html += `<div class="year-label">${year}</div>`;
         html += `<div class="games-container">`;
         html += `<div class="games-bar" style="width: ${width}%;">`;
-        gamesByYear[year].topGames.forEach(g => {
-          html += `<div data-appid="${g.appid}" class="top-game">${g.name}</div>`;
-        });
+        if (gamesByYear[year]) {
+          gamesByYear[year].topGames.forEach(g => {
+            html += `<div data-appid="${g.appid}" class="top-game">${g.name}</div>`;
+          });
+        }
         html += `</div>`
         html += `</div>`
         div.innerHTML = html;
@@ -98,7 +119,34 @@ GOTY.init = () => {
       })
       .on('mousemove', TOOLTIP.update)
       .on('mouseout', TOOLTIP.hide);
+};
 
+GOTY.init = () => {
+  drawChart();
+
+  // Add filters.
+  const outerContainer = document.getElementById('vis2');
+  d3.select(outerContainer).append('label')
+      .attr('for', 'vis2-select-category')
+      .html('Category: ');
+  const categoriesSelector = d3.select(outerContainer).append('select')
+      .attr('id', 'vis2-select-category')
+      .on('change', () => {
+        drawChart();
+      });
+  const categories = [
+    '',
+    'Massively Multiplayer',
+    'RPG',
+    'Indie',
+    'Simulation',
+    'Strategy',
+  ];
+
+  categoriesSelector.selectAll('option').data(categories)
+      .enter().append('option')
+      .attr('value', d => d)
+      .text(d => d);
 };
 
 })();

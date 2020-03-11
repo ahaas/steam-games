@@ -26,7 +26,7 @@ RATING.init = () => {
     .append('circle')
         .attr('cx', d => x(d.rating))
         .attr('cy', d => y(d.owners) + (Math.random()-0.5)*12)
-        .attr('r', 5)
+        .attr('r', 3)
         .attr('appid', d => d.appid)
         .attr('class', 'gamept')
         .on('mouseover', d => TOOLTIP.game(d.appid))
